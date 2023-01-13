@@ -1,6 +1,13 @@
 #include "image/logo.h"
 #include "init_code.h"
+#include "pins.h"
 
+#if __has_include("data.h")
+#include "data.h"
+#define USE_CALIBRATION_DATA 1
+#endif
+
+#include "xpt2046.h"
 #include "benchmark/lv_demo_benchmark.h"
 
 #include "lv_conf.h"
@@ -12,6 +19,7 @@
 #include "esp_lcd_panel_vendor.h"
 
 #include <Wire.h>
+#include <SPI.h>
 #include <Arduino.h>
 
 /**
@@ -20,19 +28,19 @@
 #define EXAMPLE_LCD_PIXEL_CLOCK_HZ     (5 * 1000 * 1000)
 #define EXAMPLE_LCD_BK_LIGHT_ON_LEVEL  (1)
 #define EXAMPLE_LCD_BK_LIGHT_OFF_LEVEL (!EXAMPLE_LCD_BK_LIGHT_ON_LEVEL)
-#define EXAMPLE_PIN_NUM_DATA0          (48)
-#define EXAMPLE_PIN_NUM_DATA1          (47)
-#define EXAMPLE_PIN_NUM_DATA2          (39)
-#define EXAMPLE_PIN_NUM_DATA3          (40)
-#define EXAMPLE_PIN_NUM_DATA4          (41)
-#define EXAMPLE_PIN_NUM_DATA5          (42)
-#define EXAMPLE_PIN_NUM_DATA6          (45)
-#define EXAMPLE_PIN_NUM_DATA7          (46)
-#define EXAMPLE_PIN_NUM_PCLK           (8)
-#define EXAMPLE_PIN_NUM_CS             (6)
-#define EXAMPLE_PIN_NUM_DC             (7)
-#define EXAMPLE_PIN_NUM_RST            (-1)
-#define EXAMPLE_PIN_NUM_BK_LIGHT       (38)
+#define EXAMPLE_PIN_NUM_DATA0          (LCD_DATA0_PIN)
+#define EXAMPLE_PIN_NUM_DATA1          (LCD_DATA1_PIN)
+#define EXAMPLE_PIN_NUM_DATA2          (LCD_DATA2_PIN)
+#define EXAMPLE_PIN_NUM_DATA3          (LCD_DATA3_PIN)
+#define EXAMPLE_PIN_NUM_DATA4          (LCD_DATA4_PIN)
+#define EXAMPLE_PIN_NUM_DATA5          (LCD_DATA5_PIN)
+#define EXAMPLE_PIN_NUM_DATA6          (LCD_DATA6_PIN)
+#define EXAMPLE_PIN_NUM_DATA7          (LCD_DATA7_PIN)
+#define EXAMPLE_PIN_NUM_PCLK           (PCLK_PIN)
+#define EXAMPLE_PIN_NUM_CS             (CS_PIN)
+#define EXAMPLE_PIN_NUM_DC             (DC_PIN)
+#define EXAMPLE_PIN_NUM_RST            (RST_PIN)
+#define EXAMPLE_PIN_NUM_BK_LIGHT       (BK_LIGHT_PIN)
 
 /**
  * The pixel number in horizontal and vertical
@@ -46,9 +54,13 @@
 #define EXAMPLE_LCD_CMD_BITS           (8)
 #define EXAMPLE_LCD_PARAM_BITS         (8)
 
+// SPIClass SPI;
+XPT2046 touch(SPI, TOUCHSCREEN_CS_PIN, TOUCHSCREEN_IRQ_PIN);
+// static bool touch_pin_get_int = false;
 
-static bool touch_pin_get_int = false;
-
+#if USE_CALIBRATION_DATA
+touch_calibration_t calibration_data[4];
+#endif
 
 void scan_iic(void) {
     byte error, address;
@@ -98,19 +110,17 @@ static void example_lvgl_flush_cb(lv_disp_drv_t *drv, const lv_area_t *area, lv_
 }
 
 
-// static void lv_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
-//     uint8_t touch_points_num;
-//     uint16_t x, y;
-//     if (touch_pin_get_int) {
-//         ft3267_read_pos(&touch_points_num, &x, &y);
-//         data->state = LV_INDEV_STATE_PR;
-//         data->point.x = x;
-//         data->point.y = y;
-//         touch_pin_get_int = false;
-//     } else {
-//         data->state = LV_INDEV_STATE_REL;
-//     }
-// }
+static void lv_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data) {
+    uint16_t x, y;
+    if (touch.pressed()) {
+        data->state = LV_INDEV_STATE_PR;
+        data->point.x = touch.X();
+        data->point.y = touch.Y();
+        // touch_pin_get_int = false;
+    } else {
+        data->state = LV_INDEV_STATE_REL;
+    }
+}
 
 
 void setup() {
@@ -120,9 +130,23 @@ void setup() {
 
     Serial.begin(115200);
 
+#if USE_CALIBRATION_DATA
+    data_init();
+    data_read(calibration_data);
+#endif
+
+    SPI.begin(TOUCHSCREEN_SCLK_PIN, TOUCHSCREEN_MISO_PIN, TOUCHSCREEN_MOSI_PIN);
+    touch.begin(240, 320);
+#if USE_CALIBRATION_DATA
+    touch.setCal(calibration_data[0].rawX, calibration_data[2].rawX, calibration_data[0].rawY, calibration_data[2].rawX, 240, 320); // Raw xmin, xmax, ymin, ymax, width, height
+#else
+    touch.setCal(1788, 285, 1877, 311, 240, 320); // Raw xmin, xmax, ymin, ymax, width, height
+    Serial.println("Use default calibration data");
+#endif
+    touch.setRotation(0);
     print_chip_info();
-    pinMode(10, OUTPUT);
-    digitalWrite(10, HIGH);
+    pinMode(PWR_EN_PIN, OUTPUT);
+    digitalWrite(PWR_EN_PIN, HIGH);
     pinMode(EXAMPLE_PIN_NUM_BK_LIGHT, OUTPUT);
     digitalWrite(EXAMPLE_PIN_NUM_BK_LIGHT, EXAMPLE_LCD_BK_LIGHT_ON_LEVEL);
     delay(200);
@@ -205,10 +229,10 @@ void setup() {
     disp_drv.user_data = panel_handle;
     lv_disp_t *disp = lv_disp_drv_register(&disp_drv);
 
-    // lv_indev_drv_init(&indev_drv);
-    // indev_drv.type = LV_INDEV_TYPE_POINTER;
-    // indev_drv.read_cb = lv_touchpad_read;
-    // lv_indev_drv_register(&indev_drv);
+    lv_indev_drv_init(&indev_drv);
+    indev_drv.type = LV_INDEV_TYPE_POINTER;
+    indev_drv.read_cb = lv_touchpad_read;
+    lv_indev_drv_register(&indev_drv);
 
     lv_demo_benchmark();
 }

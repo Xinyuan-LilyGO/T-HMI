@@ -1,0 +1,19 @@
+{
+    "type": "Resistive touch screen",
+    "point_1": {
+        "raw_x": 2000,
+        "raw_y": 2000
+    },
+    "point_2": {
+        "raw_x": 2000,
+        "raw_y": 2000
+    },
+    "point_3": {
+        "raw_x": 2000,
+        "raw_y": 2000
+    },
+    "point_4": {
+        "raw_x": 2000,
+        "raw_y": 2000
+    }
+}

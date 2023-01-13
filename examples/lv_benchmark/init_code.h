@@ -54,7 +54,8 @@ static const lcd_init_cmd_t st_init_cmds[] = {
     }, {
         .cmd = 0xc0,
         .data = {0x2c},
-        .len = 1
+        .len = 1,
+        .delay = 0
     }, {
         .cmd = 0xc2,
         .data = {0x01},
