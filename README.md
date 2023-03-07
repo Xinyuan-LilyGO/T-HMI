@@ -6,3 +6,5 @@ If you use Arduino IDE, you need to download the library from these places
 2. [ArduinoJson](https://github.com/bblanchon/ArduinoJson)
 3. [lvgl](https://github.com/lvgl/lvgl)
 4. [OneButton](https://github.com/mathertel/OneButton)
+
+![image](https://github.com/Xinyuan-LilyGO/T-HMI/blob/master/T-HMI.jpg)
