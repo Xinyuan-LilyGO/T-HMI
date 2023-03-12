@@ -6,7 +6,7 @@
 
 ## Pinout
 
-![image](https://github.com/Xinyuan-LilyGO/T-HMI/blob/master/T-HMI.jpg)
+![image](./image/T-HMI.jpg)
 
 
 
