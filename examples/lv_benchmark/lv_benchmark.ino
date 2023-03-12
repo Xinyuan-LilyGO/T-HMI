@@ -8,7 +8,7 @@
 #endif
 
 #include "xpt2046.h"
-#include "benchmark/lv_demo_benchmark.h"
+#include "./src/lv_demo_benchmark.h"
 
 #include "lv_conf.h"
 #include "lvgl.h"
