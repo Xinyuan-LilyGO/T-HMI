@@ -29,6 +29,7 @@ Please enter the upload mode manually.
 
 | Setting                  | Value                            |
 | :----------------------- | :------------------------------- |
+| Board                    | ESP32 S3 Dev Module              |
 | USB CDC On Boot          | Enabled                          |
 | CPU Frequency            | 240MHz (WiFi)                    |
 | Core Debug Level         | None                             |
