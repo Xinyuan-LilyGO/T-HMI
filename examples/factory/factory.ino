@@ -1,6 +1,7 @@
 #include "data.h"
 #include "pins.h"
 #include "image/logo.h"
+#include "image/LilyGoFCC.h"
 
 #include "CalibrationController.h"
 #include "TestController.h"
@@ -87,14 +88,15 @@ uint8_t currentScreen = 0;
 portMUX_TYPE flushLock = (portMUX_TYPE)portMUX_INITIALIZER_UNLOCKED;
 
 // Please enter the ssid and password of the wifi
-const char* ssid     = "xinyuandianzi";
-const char* password = "AA15994823428";
+const char *ssid     = "xinyuandianzi";
+const char *password = "AA15994823428";
 
 static lv_disp_draw_buf_t disp_buf; // contains internal graphic buffer(s) called draw buffer(s)
 static lv_disp_drv_t disp_drv;      // contains callback functions
 static lv_indev_drv_t indev_drv;
 
-void setup() {
+void setup()
+{
     pinMode(PWR_ON_PIN, OUTPUT);
     digitalWrite(PWR_ON_PIN, HIGH);
 
@@ -171,8 +173,8 @@ void setup() {
     pinMode(EXAMPLE_PIN_NUM_BK_LIGHT, OUTPUT);
     digitalWrite(EXAMPLE_PIN_NUM_BK_LIGHT, EXAMPLE_LCD_BK_LIGHT_ON_LEVEL);
 
-    esp_lcd_panel_draw_bitmap(panel_handle, 0, 0, 320, 240, gImage_logo);
-    delay(500);
+    esp_lcd_panel_draw_bitmap(panel_handle, 0, 0, 320, 240, gImage_LilyGoFCC);
+    delay(3000);
 
     Serial.println(F("Initialize touch screen calibration data"));
     data_init();
@@ -200,9 +202,9 @@ void setup() {
     lv_init();
     // alloc draw buffers used by LVGL from PSRAM
     lv_color_t *buf1 = (lv_color_t *)heap_caps_malloc(
-        EXAMPLE_LCD_H_RES * EXAMPLE_LCD_V_RES * sizeof(lv_color_t),
-        MALLOC_CAP_SPIRAM
-    );
+                           EXAMPLE_LCD_H_RES * EXAMPLE_LCD_V_RES * sizeof(lv_color_t),
+                           MALLOC_CAP_SPIRAM
+                       );
     if (!buf1) {
         Serial.println(F("lvgl buffer 1 application failed"));
         Serial.println(F("system restarting..."));
@@ -210,9 +212,9 @@ void setup() {
         esp_restart();
     }
     lv_color_t *buf2 = (lv_color_t *)heap_caps_malloc(
-        EXAMPLE_LCD_H_RES * EXAMPLE_LCD_V_RES * sizeof(lv_color_t),
-        MALLOC_CAP_SPIRAM
-    );
+                           EXAMPLE_LCD_H_RES * EXAMPLE_LCD_V_RES * sizeof(lv_color_t),
+                           MALLOC_CAP_SPIRAM
+                       );
     if (buf2) {
         Serial.println(F("lvgl uses double buffer"));
         lv_disp_draw_buf_init(
@@ -249,7 +251,7 @@ void setup() {
         indev_drv.type = LV_INDEV_TYPE_POINTER;
         indev_drv.read_cb = lv_touchpad_read;
         indev_drv.user_data = &touch;
-        lv_indev_t* indev = lv_indev_drv_register(&indev_drv);
+        lv_indev_t *indev = lv_indev_drv_register(&indev_drv);
     }
 
     Serial.println(F("run lvgl task"));
@@ -274,47 +276,50 @@ void setup() {
 }
 
 
-void loop() {
+void loop()
+{
     lv_timer_handler();
     delay(10);
 }
 
 
-static void power_off() {
+static void power_off()
+{
     Serial.println(F("shutting down..."));
     delay(100);
     digitalWrite(PWR_ON_PIN, LOW);
 }
 
 
-static void changeScreen() {
+static void changeScreen()
+{
     switch ((++currentScreen) % 5) {
-        case 0:
-            sketchpadController.onViewDisappear();
-            calibrationController.onViewLoad();
+    case 0:
+        sketchpadController.onViewDisappear();
+        calibrationController.onViewLoad();
         break;
 
-        case 1:
-            calibrationController.onViewDisappear();
-            testController.onViewLoad();
+    case 1:
+        calibrationController.onViewDisappear();
+        testController.onViewLoad();
         break;
 
-        case 2:
-            testController.onViewDisappear();
-            timerController.onViewLoad();
+    case 2:
+        testController.onViewDisappear();
+        timerController.onViewLoad();
         break;
 
-        case 3:
-            timerController.onViewDisappear();
-            monitorController.onViewLoad();
+    case 3:
+        timerController.onViewDisappear();
+        monitorController.onViewLoad();
         break;
 
-        case 4:
-            monitorController.onViewDisappear();
-            sketchpadController.onViewLoad();
+    case 4:
+        monitorController.onViewDisappear();
+        sketchpadController.onViewLoad();
         break;
 
-        default: break;
+    default: break;
     }
 }
 
@@ -323,7 +328,8 @@ static void example_lvgl_flush_cb(
     lv_disp_drv_t *drv,
     const lv_area_t *area,
     lv_color_t *color_map
-) {
+)
+{
     esp_lcd_panel_handle_t panel_handle = (esp_lcd_panel_handle_t)drv->user_data;
     // taskENTER_CRITICAL(&flushLock);
     esp_lcd_panel_draw_bitmap(
@@ -342,7 +348,8 @@ static void example_lvgl_flush_cb(
 static void lv_touchpad_read(
     lv_indev_drv_t *indev_driver,
     lv_indev_data_t *data
-) {
+)
+{
     XPT2046 *touch = (XPT2046 *)indev_driver->user_data;
     if (touch->pressed()) {
         data->state = LV_INDEV_STATE_PR;
@@ -358,8 +365,9 @@ static void lv_touchpad_read(
 }
 
 
-static void lvglTask(void *param) {
-    while(1) {
+static void lvglTask(void *param)
+{
+    while (1) {
         buttonOK.tick();
         buttonNext.tick();
         delay(10);
@@ -369,7 +377,8 @@ static void lvglTask(void *param) {
 
 
 #if 0
-void calibrationTask(void *param) {
+void calibrationTask(void *param)
+{
     uint8_t point = 0;
     bool flag = false;
     uint32_t last = 0;
@@ -455,7 +464,8 @@ void calibrationTask(void *param) {
 
 
 
-void testTask(void *param) {
+void testTask(void *param)
+{
     String result = "";
     bool sdStatus = false;
 
@@ -525,37 +535,37 @@ void testTask(void *param) {
         lv_msg_send(MSG_NEW_RSSI, result.c_str());
 
         switch (WiFi.status()) {
-            case WL_IDLE_STATUS:
-                result = "FAIL - (IDLE)";
+        case WL_IDLE_STATUS:
+            result = "FAIL - (IDLE)";
             break;
 
-            case WL_NO_SSID_AVAIL:
-                result = "FAIL - (No SSID Avail)";
+        case WL_NO_SSID_AVAIL:
+            result = "FAIL - (No SSID Avail)";
             break;
 
-            case WL_SCAN_COMPLETED:
-                result = "FAIL - (Scan Completed)";
+        case WL_SCAN_COMPLETED:
+            result = "FAIL - (Scan Completed)";
             break;
 
-            case WL_CONNECTED:
-                result = "PASS - (";
-                result += WiFi.localIP().toString();
-                result += ")";
+        case WL_CONNECTED:
+            result = "PASS - (";
+            result += WiFi.localIP().toString();
+            result += ")";
             break;
 
-            case WL_CONNECT_FAILED:
-                result = "FAIL - (Connect Failed)";
+        case WL_CONNECT_FAILED:
+            result = "FAIL - (Connect Failed)";
             break;
 
-            case WL_CONNECTION_LOST:
-                result = "FAIL - (Connection Lost)";
+        case WL_CONNECTION_LOST:
+            result = "FAIL - (Connection Lost)";
             break;
 
-            case WL_DISCONNECTED:
-                result = "FAIL - (Disconnected)";
+        case WL_DISCONNECTED:
+            result = "FAIL - (Disconnected)";
             break;
 
-            default: break;
+        default: break;
         }
         lv_msg_send(MSG_NEW_WIFI, result.c_str());
 
@@ -566,7 +576,8 @@ void testTask(void *param) {
 }
 
 
-void timerTask(void *param) {
+void timerTask(void *param)
+{
     struct tm timeinfo;
 
     sntp_servermode_dhcp(1);
@@ -587,7 +598,8 @@ void timerTask(void *param) {
 }
 
 
-void monitorTask(void *param) {
+void monitorTask(void *param)
+{
     int32_t temperature = 0;
     int32_t humidity = 0;
 
@@ -607,7 +619,8 @@ void monitorTask(void *param) {
 #endif
 
 
-void wifiInit(void) {
+void wifiInit(void)
+{
     WiFi.disconnect(true);
     delay(100);
 
@@ -621,93 +634,94 @@ void wifiInit(void) {
 }
 
 
-void WiFiEvent(WiFiEvent_t event) {
+void WiFiEvent(WiFiEvent_t event)
+{
     Serial.printf("[WiFi-event] event: %d\n", event);
 
     switch (event) {
-        case ARDUINO_EVENT_WIFI_READY:
-            Serial.println("WiFi interface ready");
-            break;
-        case ARDUINO_EVENT_WIFI_SCAN_DONE:
-            Serial.println("Completed scan for access points");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_START:
-            Serial.println("WiFi client started");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_STOP:
-            Serial.println("WiFi clients stopped");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_CONNECTED:
-            Serial.println("Connected to access point");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
-            WiFi.begin(ssid, password); 
-            Serial.println("Disconnected from WiFi access point");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_AUTHMODE_CHANGE:
-            Serial.println("Authentication mode of access point has changed");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_GOT_IP:
-            Serial.print("Obtained IP address: ");
-            Serial.println(WiFi.localIP());
-            break;
-        case ARDUINO_EVENT_WIFI_STA_LOST_IP:
-            Serial.println("Lost IP address and IP address is reset to 0");
-            break;
-        case ARDUINO_EVENT_WPS_ER_SUCCESS:
-            Serial.println("WiFi Protected Setup (WPS): succeeded in enrollee mode");
-            break;
-        case ARDUINO_EVENT_WPS_ER_FAILED:
-            Serial.println("WiFi Protected Setup (WPS): failed in enrollee mode");
-            break;
-        case ARDUINO_EVENT_WPS_ER_TIMEOUT:
-            Serial.println("WiFi Protected Setup (WPS): timeout in enrollee mode");
-            break;
-        case ARDUINO_EVENT_WPS_ER_PIN:
-            Serial.println("WiFi Protected Setup (WPS): pin code in enrollee mode");
-            break;
-        case ARDUINO_EVENT_WIFI_AP_START:
-            Serial.println("WiFi access point started");
-            break;
-        case ARDUINO_EVENT_WIFI_AP_STOP:
-            Serial.println("WiFi access point  stopped");
-            break;
-        case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
-            Serial.println("Client connected");
-            break;
-        case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
-            Serial.println("Client disconnected");
-            break;
-        case ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED:
-            Serial.println("Assigned IP address to client");
-            break;
-        case ARDUINO_EVENT_WIFI_AP_PROBEREQRECVED:
-            Serial.println("Received probe request");
-            break;
-        case ARDUINO_EVENT_WIFI_AP_GOT_IP6:
-            Serial.println("AP IPv6 is preferred");
-            break;
-        case ARDUINO_EVENT_WIFI_STA_GOT_IP6:
-            Serial.println("STA IPv6 is preferred");
-            break;
-        case ARDUINO_EVENT_ETH_GOT_IP6:
-            Serial.println("Ethernet IPv6 is preferred");
-            break;
-        case ARDUINO_EVENT_ETH_START:
-            Serial.println("Ethernet started");
-            break;
-        case ARDUINO_EVENT_ETH_STOP:
-            Serial.println("Ethernet stopped");
-            break;
-        case ARDUINO_EVENT_ETH_CONNECTED:
-            Serial.println("Ethernet connected");
-            break;
-        case ARDUINO_EVENT_ETH_DISCONNECTED:
-            Serial.println("Ethernet disconnected");
-            break;
-        case ARDUINO_EVENT_ETH_GOT_IP:
-            Serial.println("Obtained IP address");
-            break;
-        default: break;
+    case ARDUINO_EVENT_WIFI_READY:
+        Serial.println("WiFi interface ready");
+        break;
+    case ARDUINO_EVENT_WIFI_SCAN_DONE:
+        Serial.println("Completed scan for access points");
+        break;
+    case ARDUINO_EVENT_WIFI_STA_START:
+        Serial.println("WiFi client started");
+        break;
+    case ARDUINO_EVENT_WIFI_STA_STOP:
+        Serial.println("WiFi clients stopped");
+        break;
+    case ARDUINO_EVENT_WIFI_STA_CONNECTED:
+        Serial.println("Connected to access point");
+        break;
+    case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
+        WiFi.begin(ssid, password);
+        Serial.println("Disconnected from WiFi access point");
+        break;
+    case ARDUINO_EVENT_WIFI_STA_AUTHMODE_CHANGE:
+        Serial.println("Authentication mode of access point has changed");
+        break;
+    case ARDUINO_EVENT_WIFI_STA_GOT_IP:
+        Serial.print("Obtained IP address: ");
+        Serial.println(WiFi.localIP());
+        break;
+    case ARDUINO_EVENT_WIFI_STA_LOST_IP:
+        Serial.println("Lost IP address and IP address is reset to 0");
+        break;
+    case ARDUINO_EVENT_WPS_ER_SUCCESS:
+        Serial.println("WiFi Protected Setup (WPS): succeeded in enrollee mode");
+        break;
+    case ARDUINO_EVENT_WPS_ER_FAILED:
+        Serial.println("WiFi Protected Setup (WPS): failed in enrollee mode");
+        break;
+    case ARDUINO_EVENT_WPS_ER_TIMEOUT:
+        Serial.println("WiFi Protected Setup (WPS): timeout in enrollee mode");
+        break;
+    case ARDUINO_EVENT_WPS_ER_PIN:
+        Serial.println("WiFi Protected Setup (WPS): pin code in enrollee mode");
+        break;
+    case ARDUINO_EVENT_WIFI_AP_START:
+        Serial.println("WiFi access point started");
+        break;
+    case ARDUINO_EVENT_WIFI_AP_STOP:
+        Serial.println("WiFi access point  stopped");
+        break;
+    case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
+        Serial.println("Client connected");
+        break;
+    case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
+        Serial.println("Client disconnected");
+        break;
+    case ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED:
+        Serial.println("Assigned IP address to client");
+        break;
+    case ARDUINO_EVENT_WIFI_AP_PROBEREQRECVED:
+        Serial.println("Received probe request");
+        break;
+    case ARDUINO_EVENT_WIFI_AP_GOT_IP6:
+        Serial.println("AP IPv6 is preferred");
+        break;
+    case ARDUINO_EVENT_WIFI_STA_GOT_IP6:
+        Serial.println("STA IPv6 is preferred");
+        break;
+    case ARDUINO_EVENT_ETH_GOT_IP6:
+        Serial.println("Ethernet IPv6 is preferred");
+        break;
+    case ARDUINO_EVENT_ETH_START:
+        Serial.println("Ethernet started");
+        break;
+    case ARDUINO_EVENT_ETH_STOP:
+        Serial.println("Ethernet stopped");
+        break;
+    case ARDUINO_EVENT_ETH_CONNECTED:
+        Serial.println("Ethernet connected");
+        break;
+    case ARDUINO_EVENT_ETH_DISCONNECTED:
+        Serial.println("Ethernet disconnected");
+        break;
+    case ARDUINO_EVENT_ETH_GOT_IP:
+        Serial.println("Obtained IP address");
+        break;
+    default: break;
     }
 }
