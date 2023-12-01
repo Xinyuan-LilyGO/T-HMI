@@ -68,9 +68,13 @@ Please enter the upload mode manually.
 2. If the above is invalid, burn the [firmware](./firmware/README.MD)  to check whether the hardware is normal
 3. Powering up the T-HMI board via the 5V DC connector does not work
    - Looking at the [schematic](./schematic/Schematic.pdf), we know that if you use an external 5V power supply, you need to bring a magnet close to the ReedSwitch and set the PowerOn Pin (GPIO14) to HIGH as soon as the chip starts.
+   ```c
+    pinMode(14, OUTPUT);
+    digitalWrite(14, HIGH);
+    ```
 4. It can start normally when using USB power supply, but it cannot start when connected to the battery alone?
-   - When using the battery alone, IO14 needs to be set to HIHG to work properly.
+   - When using the battery alone, IO10 needs to be set to HIHG to work properly.
     ```c
-    pinMode(PWR_ON_PIN, OUTPUT);  //GPIO 14
-    digitalWrite(PWR_ON_PIN, HIGH);
+    pinMode(10, OUTPUT);
+    digitalWrite(10, HIGH);
     ```
