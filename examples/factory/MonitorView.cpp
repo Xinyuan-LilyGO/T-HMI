@@ -290,7 +290,7 @@ void MonitorView::updateHumidity(long humidity) {
     lv_anim_set_repeat_count(&anim, 0);
     lv_anim_start(&anim);
 
-    lv_label_set_text_fmt(ui.humidityLable, "%d %%", humidity);
+    lv_label_set_text_fmt(ui.humidityLable, "%lu %%", humidity);
 
     last_value = humidity;
 }

@@ -129,7 +129,6 @@ OUT:
 
 bool CalibrationModel::writeToNVS() {
     nvs_handle_t data_handle;
-    size_t required_size = 0;
     esp_err_t err;
     StaticJsonDocument<1024> doc;
     char str[1024] = { 0 };

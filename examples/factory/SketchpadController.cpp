@@ -72,7 +72,7 @@ void SketchpadController::onBrushColorLabelEvent(lv_event_t * e) {
 
 void SketchpadController::onBrushLabelEvent(lv_event_t * e) {
     lv_event_code_t code = lv_event_get_code(e);
-    lv_obj_t *obj = lv_event_get_target(e);
+    // lv_obj_t *obj = lv_event_get_target(e);
     SketchpadController *controller = (SketchpadController *)lv_event_get_user_data(e);
 
     // Serial.print("onBrushLabelEvent Event Code: ");
@@ -151,8 +151,8 @@ void SketchpadController::onCanvasEvent(lv_event_t * e) {
         lv_point_t point;
         lv_indev_get_point(indev, &point);
 
-        lv_color_t c0;
-        c0.full = 10;
+        // lv_color_t c0;
+        // c0.full = 10;
 
         lv_point_t points[2];
 

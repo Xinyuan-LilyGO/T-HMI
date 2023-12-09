@@ -113,7 +113,6 @@ void CalibrationController::onScreenEvent(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     CalibrationController *controller = (CalibrationController *)lv_event_get_user_data(e);
-    lv_obj_t *target = lv_event_get_target(e);
 
     if(event_code == LV_EVENT_CLICKED) {
         controller->view.setPointx(controller->view.ui.buttonPoints[0], false);
@@ -143,7 +142,6 @@ void CalibrationController::onButton1Event(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     CalibrationController *controller = (CalibrationController *)lv_event_get_user_data(e);
-    lv_obj_t *target = lv_event_get_target(e);
 
     if(event_code == LV_EVENT_CLICKED) {
         controller->view.setPointx(controller->view.ui.buttonPoints[1], false);
@@ -157,7 +155,6 @@ void CalibrationController::onButton2Event(lv_event_t *e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     CalibrationController *controller = (CalibrationController *)lv_event_get_user_data(e);
-    lv_obj_t *target = lv_event_get_target(e);
 
     if(event_code == LV_EVENT_CLICKED) {
         controller->view.setPointx(controller->view.ui.buttonPoints[2], false);
@@ -171,7 +168,6 @@ void CalibrationController::onButton3Event(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
     CalibrationController *controller = (CalibrationController*)lv_event_get_user_data(e);
-    lv_obj_t *target = lv_event_get_target(e);
 
     if(event_code == LV_EVENT_CLICKED) {
         controller->view.setPointx(controller->view.ui.buttonPoints[3], false);
@@ -184,7 +180,6 @@ void CalibrationController::onButton3Event(lv_event_t * e)
 void CalibrationController::onButton4Event(lv_event_t * e) {
     lv_event_code_t event_code = lv_event_get_code(e);
     CalibrationController *controller = (CalibrationController *)lv_event_get_user_data(e);
-    lv_obj_t *target = lv_event_get_target(e);
 
     if(event_code == LV_EVENT_CLICKED) {
         // controller->view.setPointx(controller->view.ui.buttonNext, false);

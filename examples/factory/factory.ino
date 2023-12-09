@@ -243,7 +243,7 @@ void setup()
     disp_drv.draw_buf = &disp_buf;
     disp_drv.user_data = panel_handle;
     disp_drv.full_refresh = 1;
-    lv_disp_t *disp = lv_disp_drv_register(&disp_drv);
+    lv_disp_drv_register(&disp_drv);
 
     if (calibrated) {
         Serial.println(F("Register input driver to lvgl"));
@@ -251,7 +251,7 @@ void setup()
         indev_drv.type = LV_INDEV_TYPE_POINTER;
         indev_drv.read_cb = lv_touchpad_read;
         indev_drv.user_data = &touch;
-        lv_indev_t *indev = lv_indev_drv_register(&indev_drv);
+        lv_indev_drv_register(&indev_drv);
     }
 
     Serial.println(F("run lvgl task"));
