@@ -24,7 +24,7 @@ Please enter the upload mode manually.
 
 1. In Arduino Preferences, on the Settings tab, enter the `https://espressif.github.io/arduino-esp32/package_esp32_index.json` URL in the `Additional boards manager URLs` input box. 
 2. Click OK and the software will install. 
-3. Search for ESP32 in Tools → Board Manager and install ESP32-Arduino SDK (V 2.0.5 or above, V3.0 or below)
+3. Search for ESP32 in Tools → Board Manager and install ESP32-Arduino SDK (V 2.0.5 or above and below V3.0)
 ![](image/Arduino_board.png)
 4. Copy everything from this repository lib folder to [Arduino library folder](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries#manual-installation) (e.g. `C:\Users\YourName\Documents\Arduino\libraries`)
 5. Select the correct settings in the Tools menu as shown below.
