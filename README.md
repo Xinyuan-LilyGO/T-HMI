@@ -20,7 +20,7 @@ Please enter the upload mode manually.
 
 ### Arduino
 
-![Record Video](https://youtu.be/4tYiujotmKI)
+* [Record Video](https://youtu.be/4tYiujotmKI)
 
 1. In Arduino Preferences, on the Settings tab, enter the `https://espressif.github.io/arduino-esp32/package_esp32_index.json` URL in the `Additional boards manager URLs` input box. 
 2. Click OK and the software will install. 
