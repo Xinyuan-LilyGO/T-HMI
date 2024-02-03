@@ -7,22 +7,61 @@ TFT_eSPI tft = TFT_eSPI();
 #define WAIT 1000
 unsigned long targetTime = 0; // Used for testing draw times
 
-void setup() {
+void setBrightness(uint8_t value)
+{
+    static uint8_t steps = 16;
+    static uint8_t _brightness = 0;
+
+    if (_brightness == value) {
+        return;
+    }
+
+    if (value > 16) {
+        value = 16;
+    }
+    if (value == 0) {
+        digitalWrite(BK_LIGHT_PIN, 0);
+        delay(3);
+        _brightness = 0;
+        return;
+    }
+    if (_brightness == 0) {
+        digitalWrite(BK_LIGHT_PIN, 1);
+        _brightness = steps;
+        delayMicroseconds(30);
+    }
+    int from = steps - _brightness;
+    int to = steps - value;
+    int num = (steps + to - from) % steps;
+    for (int i = 0; i < num; i++) {
+        digitalWrite(BK_LIGHT_PIN, 0);
+        digitalWrite(BK_LIGHT_PIN, 1);
+    }
+    _brightness = value;
+}
+
+void setup()
+{
     pinMode(PWR_EN_PIN, OUTPUT);
     digitalWrite(PWR_EN_PIN, HIGH);
-    // pinMode(38, OUTPUT);
-    // digitalWrite(38, HIGH);
+
     Serial.begin(115200);
     Serial.println("Hello T-HMI");
+
 
     tft.begin();
     tft.setRotation(0);
     tft.setSwapBytes(true);
     tft.pushImage(0, 0, 240, 320, (uint16_t *)gImage_logo);
+
+    // Set backlight level, range 0 ~ 16
+    setBrightness(16);
+
     delay(3000);
 }
 
-void loop() {
+void loop()
+{
     targetTime = millis();
 
     // First we test them with a background colour set
