@@ -1,7 +1,7 @@
 #include "pins.h"
 #include "Arduino.h"
 #include "TFT_eSPI.h"/* Please use the TFT library provided in the library. */
-#include "image/logo.h"
+#include "logo.h"
 
 TFT_eSPI tft = TFT_eSPI();
 #define WAIT 1000
@@ -60,8 +60,14 @@ void setup()
     delay(3000);
 }
 
+
+uint8_t rotation = 0;
+
 void loop()
 {
+
+    tft.setRotation(rotation);
+
     targetTime = millis();
 
     // First we test them with a background colour set
@@ -215,4 +221,7 @@ void loop()
 
     tft.drawNumber(millis() - targetTime, 0, 100, 4);
     delay(4000);
+
+    rotation++;
+    rotation %= 4;
 }
