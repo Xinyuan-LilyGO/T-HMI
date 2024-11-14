@@ -16,6 +16,8 @@ XPT2046::XPT2046(SPIClass &spi, byte cs, uint8_t tirq) {
     pinMode(_cs, OUTPUT);
     digitalWrite(_cs, HIGH);
 
+    pinMode(_tirq,INPUT_PULLUP);
+
     _hmin = 0;
     _hmax = 4095;
     _vmin = 0;
@@ -70,7 +72,7 @@ boolean XPT2046::pressed(void)
     if (digitalRead(_tirq) == HIGH) {
         return false;
     }
-
+    Serial.println("Pressed!");
     if (_spi) {
         _spi->beginTransaction(SPI_SETTING);
         digitalWrite(_cs, LOW);
