@@ -5,6 +5,12 @@
 
 OneButton buttonOK(21, false, false);
 
+/*
+* Power on/off method:
+* 1. Use the onboard ON/OFF switch to switch the machine on and off
+* 2. Connect an external switch, see here https://github.com/Xinyuan-LilyGO/T-HMI/issues/34
+* 3. Use a magnet to approach the reed switch to switch
+* */
 void setup() {
     pinMode(PWR_ON_PIN, OUTPUT);
     digitalWrite(PWR_ON_PIN, HIGH);

@@ -56,7 +56,6 @@ Please enter the upload mode manually.
 1. PlatformIO plug-in installation: click on the extension on the left column → search platformIO → install the first plug-in
 2. Click Platforms → Embedded → search Espressif 32 in the input box → select the corresponding firmware installation
 
-
 ## Tips
 
 1. The board uses USB as the JTAG upload port. When printing serial port information on USB_CDC_ON_BOOT configuration needs to be turned on.
@@ -75,8 +74,9 @@ Please enter the upload mode manually.
     digitalWrite(14, HIGH);
     ```
 4. It can start normally when using USB power supply, but it cannot start when connected to the battery alone?
-   - When using the battery alone, IO10 needs to be set to HIHG to work properly.
+   - When using the battery alone, IO10 needs to be set to HIGH to work properly.
     ```c
     pinMode(10, OUTPUT);
     digitalWrite(10, HIGH);
     ```
+5. How to turn the machine on and off with a switch and how many ways are there? See [here](https://github.com/Xinyuan-LilyGO/T-HMI/tree/master/examples/power_on)
