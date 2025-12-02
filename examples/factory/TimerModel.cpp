@@ -1,6 +1,6 @@
 #include "TimerModel.h"
 
-#include <sntp.h>
+#include "esp_sntp.h"
 #include <time.h>
 #include <Arduino.h>
 
