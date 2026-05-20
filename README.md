@@ -80,3 +80,7 @@ Please enter the upload mode manually.
     digitalWrite(10, HIGH);
     ```
 5. How to turn the machine on and off with a switch and how many ways are there? See [here](https://github.com/Xinyuan-LilyGO/T-HMI/tree/master/examples/power_on)
+
+## Dimension
+
+![](./3D/HMI.png)
