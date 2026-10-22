@@ -30,6 +30,7 @@ struct ButtonDef {
 };
 
 constexpr size_t MAX_BUTTONS_PER_PAGE = 6;
+constexpr size_t MAX_PAGES = 8;
 
 struct PageDef {
     const char *title;
@@ -96,6 +97,9 @@ inline constexpr PageDef PAGES[] = {
 };
 
 inline constexpr size_t PAGE_COUNT = sizeof(PAGES) / sizeof(PAGES[0]);
+
+static_assert(PAGE_COUNT > 0, "config.h: at least one page is required");
+static_assert(PAGE_COUNT <= MAX_PAGES, "config.h: too many pages configured");
 
 // ---------------------------------------------------------------------------
 // Compile-time validation

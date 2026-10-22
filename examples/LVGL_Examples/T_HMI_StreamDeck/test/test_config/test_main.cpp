@@ -20,6 +20,29 @@ void assert_page_layout(const PageDef &page) {
 
 void test_pages_exist(void) {
     TEST_ASSERT_TRUE(PAGE_COUNT > 0);
+    TEST_ASSERT_TRUE(PAGE_COUNT <= MAX_PAGES);
+}
+
+void test_page_titles_are_unique(void) {
+    for (size_t i = 0; i < PAGE_COUNT; ++i) {
+        for (size_t j = i + 1; j < PAGE_COUNT; ++j) {
+            TEST_ASSERT_TRUE(std::strcmp(PAGES[i].title, PAGES[j].title) != 0);
+        }
+    }
+}
+
+void test_layout_rejects_invalid_pages(void) {
+    constexpr PageDef empty_page{nullptr, {}, 0};
+    TEST_ASSERT_FALSE(layout_is_valid(empty_page));
+
+    constexpr PageDef missing_title{{}, {{"A", "B", Keys(MOD_CTRL, HID_KEY_A)}}, 1};
+    TEST_ASSERT_FALSE(layout_is_valid(missing_title));
+
+    constexpr PageDef missing_label{"Test", {{nullptr, "B", Keys(MOD_CTRL, HID_KEY_A)}}, 1};
+    TEST_ASSERT_FALSE(layout_is_valid(missing_label));
+
+    constexpr PageDef missing_icon{"Test", {{"A", nullptr, Keys(MOD_CTRL, HID_KEY_A)}}, 1};
+    TEST_ASSERT_FALSE(layout_is_valid(missing_icon));
 }
 
 void test_every_page_has_a_valid_layout(void) {
@@ -86,6 +109,8 @@ void test_config_is_consistent(void) {
 void setup(void) {
     UNITY_BEGIN();
     RUN_TEST(test_pages_exist);
+    RUN_TEST(test_page_titles_are_unique);
+    RUN_TEST(test_layout_rejects_invalid_pages);
     RUN_TEST(test_every_page_has_a_valid_layout);
     RUN_TEST(test_every_button_has_an_action);
     RUN_TEST(test_modifier_masks);

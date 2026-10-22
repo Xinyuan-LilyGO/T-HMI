@@ -23,11 +23,11 @@ Pin map lives in `src/main.cpp`. It matches the official LilyGo T-HMI examples
   factory landscape mode and rotates it to **320x240 landscape**; LVGL is
   configured for 320x240. `0x60` is the same landscape rotated 180 degrees, so
   both the image and touch end up inverted.
-- UI: header (40 px) with page title, direct page tabs, and previous/next page
-  buttons. Each page is a 3x2 grid, up to six buttons.
+- UI: 48 px header with a centered page title and previous/next page arrows.
+  Each page is a 3x2 grid, up to six buttons.
 - Pages are stacked views; only the active page is visible. Page changes use
-  the header tabs or arrows, so a touch that starts on a button cannot turn
-  into a page swipe.
+  the header arrows, so a touch that starts on a button cannot turn into a page
+  swipe.
 - A 1.5 s "FUSION AUTOMATE" splash is shown before the deck. The backlight is
   kept off until the splash frame is drawn, and the idle timeout starts when the
   splash ends.
@@ -60,14 +60,14 @@ another.
 
 ## Build, flash, test
 
-```powershell
-& C:\Python313\python.exe -m platformio run -e lilygo_t_hmi
-& C:\Python313\python.exe -m platformio run -e lilygo_t_hmi -t upload
-& C:\Python313\python.exe -m platformio device monitor -b 115200
+```sh
+pio run -e lilygo_t_hmi
+pio run -e lilygo_t_hmi -t upload
+pio device monitor -b 115200
 # Compile-check the on-target Unity tests without touching a board:
-& C:\Python313\python.exe -m platformio test -e lilygo_t_hmi --without-uploading --without-testing
+pio test -e lilygo_t_hmi --without-uploading --without-testing
 # Run them on hardware:
-& C:\Python313\python.exe -m platformio test -e lilygo_t_hmi
+pio test -e lilygo_t_hmi
 ```
 
 Uploading requires the ROM bootloader: hold **BOOT**, tap **RST**, release
@@ -92,6 +92,7 @@ shortcuts to buttons that are easy to press accidentally.
 - Touch calibration uses the example defaults in native portrait order
   (`1788, 285, 1877, 311`) with `TOUCH_ROTATION = 1`. This is equivalent to
   LilyGo's `285, 1788, 311, 1877` with rotation `3`, and pairs with
-  `MADCTL = 0xA0`. If touch is still offset, store per-unit calibration values.
+  `MADCTL = 0xA0`. If touch is still offset, set `-D TOUCH_DEBUG=1` in
+  `platformio.ini` to print coordinates and store per-unit calibration values.
 - `LV_COLOR_16_SWAP 0` must stay consistent with `swap_color_bytes = 1` in the
   i80 panel IO configuration.

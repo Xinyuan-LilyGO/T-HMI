@@ -14,6 +14,10 @@
 #include "hid_manager.h"
 #include "ui/ui_manager.h"
 
+#ifndef TOUCH_DEBUG
+#define TOUCH_DEBUG 0
+#endif
+
 namespace {
 
 // The panel is natively 240x320. MADCTL rotates it to 320x240 landscape.
@@ -97,12 +101,16 @@ void lcd_flush(lv_disp_drv_t *driver, const lv_area_t *area, lv_color_t *color_m
 }
 
 void touch_read(lv_indev_drv_t *, lv_indev_data_t *data) {
+#if TOUCH_DEBUG
     static bool was_pressed = false;
+#endif
     const bool pressed = touch.pressed();
-    if (pressed != was_pressed && pressed) {
+#if TOUCH_DEBUG
+    if (pressed && !was_pressed) {
         Serial.printf("[TOUCH] x=%u y=%u raw=%u,%u\n", touch.X(), touch.Y(), touch.RawX(), touch.RawY());
     }
     was_pressed = pressed;
+#endif
     if (pressed) {
         data->state = LV_INDEV_STATE_PR;
         data->point.x = touch.X();

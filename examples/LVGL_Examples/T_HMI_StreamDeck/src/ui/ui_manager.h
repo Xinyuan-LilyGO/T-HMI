@@ -1,7 +1,6 @@
 /**
  * @file ui_manager.h
- * Builds stacked page views (one per PageDef), header page tabs and
- * previous/next buttons, and wires button clicks to HID actions.
+ * Builds the stacked page views, header navigation, and HID button wiring.
  */
 #pragma once
 

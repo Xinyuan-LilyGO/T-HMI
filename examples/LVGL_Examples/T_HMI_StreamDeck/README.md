@@ -139,6 +139,25 @@ The deck does not require any driver on Windows, macOS, or Linux for standard
 media keys and keyboard shortcuts. The host treats it as a normal USB keyboard
 and consumer-control device.
 
+## Testing
+
+The configuration tests live in `test/test_config`.
+
+Compile-check them without uploading or running:
+
+```sh
+pio test -e lilygo_t_hmi --without-uploading --without-testing
+```
+
+Run them on a connected board:
+
+```sh
+pio test -e lilygo_t_hmi
+```
+
+Running the tests flashes a test firmware. Reflash the main application
+afterward.
+
 ## Customizing Buttons and Pages
 
 All page and button definitions live in `include/config.h`.
@@ -270,7 +289,7 @@ src/main.cpp      Display, touch, LVGL, and application startup
 src/hid_manager.* USB HID keyboard and consumer-control output
 src/backlight.*   Backlight control and idle dimming
 src/ui/           Theme, layout, page switching, and shared UI state
-test/             Host-side configuration validation tests
+test/             On-target configuration validation tests
 plans/            Implementation notes
 ```
 
@@ -299,8 +318,9 @@ touch.setCal(1788, 285, 1877, 311, PANEL_WIDTH, PANEL_HEIGHT);
 touch.setRotation(TOUCH_ROTATION);
 ```
 
-The firmware prints `[TOUCH]` diagnostics over serial when a touch starts. Open
-the serial monitor with:
+The firmware can print `[TOUCH]` diagnostics over serial when a touch starts.
+Enable them by changing `-D TOUCH_DEBUG=0` to `-D TOUCH_DEBUG=1` in
+`platformio.ini`, rebuild, and open the serial monitor:
 
 ```sh
 pio device monitor --baud 115200
@@ -320,6 +340,16 @@ Use the reported coordinates to adjust the calibration values or rotation.
 
 Edit `include/config.h` and adjust the `Keys(...)` or `Media(...)` action for
 that button. Rebuild and flash the board.
+
+## Safety and Security
+
+This is a local USB HID device. It has no network stack, storage, or secrets.
+Treat it like a keyboard: anyone with physical USB access can trigger the
+configured shortcuts, so do not bind destructive actions to buttons that are
+easy to press accidentally.
+
+The default configuration includes `Win+L` on the System page. Move or remove
+that action if accidental lockouts are a concern.
 
 ## Notes
 

@@ -22,7 +22,6 @@ constexpr lv_coord_t GRID_COLUMNS[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_FR(
 constexpr lv_coord_t GRID_ROWS[] = {LV_GRID_FR(1), LV_GRID_FR(1), LV_GRID_TEMPLATE_LAST};
 
 static_assert(PAGE_COUNT > 0, "config.h must define at least one page");
-static_assert(PAGE_COUNT <= 8, "Too many pages for the header page tabs");
 static_assert(MAX_BUTTONS_PER_PAGE <= GRID_COLUMNS_COUNT * GRID_ROWS_COUNT,
               "Grid cannot hold all configured buttons");
 
@@ -46,7 +45,7 @@ void button_event(lv_event_t *event) {
     HID.send(definition->action);
 }
 
-void update_page_indicator(size_t index) {
+void update_page_title(size_t index) {
     if (index >= PAGE_COUNT) return;
     lv_label_set_text(title_label, PAGES[index].title);
 }
@@ -64,7 +63,7 @@ void show_page(size_t index) {
     }
 
     current_page = index;
-    update_page_indicator(index);
+    update_page_title(index);
     lv_obj_update_layout(page_views[index]);
     lv_obj_invalidate(page_views[index]);
     notify_activity();
