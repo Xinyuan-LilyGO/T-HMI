@@ -39,7 +39,7 @@ void set_dimmed(bool value) {
 }
 
 void button_event(lv_event_t *event) {
-    if (lv_event_get_code(event) != LV_EVENT_CLICKED) return;
+    if (lv_event_get_code(event) != LV_EVENT_PRESSED) return;
     auto *definition = static_cast<const ButtonDef *>(lv_event_get_user_data(event));
     if (definition == nullptr) return;
     notify_activity();
@@ -97,20 +97,32 @@ void first_refresh_timer(lv_timer_t *timer) {
 } // namespace
 
 void show_splash(uint32_t duration_ms) {
-    constexpr uint32_t SPLASH_BG = 0x030906;   // shop.fusionautomate.in
-    constexpr uint32_t SPLASH_TEXT = 0x4ADE4A;
-
     lv_obj_t *deck = lv_scr_act();
     lv_obj_t *splash = lv_obj_create(nullptr);
     lv_obj_remove_style_all(splash);
-    lv_obj_set_style_bg_color(splash, lv_color_hex(SPLASH_BG), 0);
+    lv_obj_set_style_bg_color(splash, theme::COL_BG, 0);
     lv_obj_set_style_bg_opa(splash, LV_OPA_COVER, 0);
 
     lv_obj_t *brand = lv_label_create(splash);
     lv_label_set_text(brand, "FUSION AUTOMATE");
-    lv_obj_set_style_text_color(brand, lv_color_hex(SPLASH_TEXT), 0);
+    lv_obj_set_style_text_color(brand, theme::COL_ACCENT, 0);
     lv_obj_set_style_text_font(brand, &lv_font_montserrat_28, 0);
-    lv_obj_center(brand);
+    lv_obj_set_style_text_letter_space(brand, 2, 0);
+    lv_obj_align(brand, LV_ALIGN_CENTER, 0, -18);
+
+    lv_obj_t *line = lv_obj_create(splash);
+    lv_obj_remove_style_all(line);
+    lv_obj_set_size(line, 64, 3);
+    lv_obj_set_style_bg_color(line, theme::COL_ACCENT, 0);
+    lv_obj_set_style_bg_opa(line, LV_OPA_COVER, 0);
+    lv_obj_align(line, LV_ALIGN_CENTER, 0, 8);
+
+    lv_obj_t *tagline = lv_label_create(splash);
+    lv_label_set_text(tagline, "LEARN. BUILD. AUTOMATE.");
+    lv_obj_set_style_text_color(tagline, theme::COL_MUTED, 0);
+    lv_obj_set_style_text_font(tagline, &lv_font_montserrat_14, 0);
+    lv_obj_set_style_text_letter_space(tagline, 1, 0);
+    lv_obj_align(tagline, LV_ALIGN_CENTER, 0, 30);
 
     lv_scr_load(splash);
     lv_timer_handler();
@@ -142,12 +154,18 @@ void build() {
     lv_obj_remove_style_all(header);
     lv_obj_set_size(header, LV_PCT(100), HEADER_HEIGHT);
     lv_obj_align(header, LV_ALIGN_TOP_MID, 0, 0);
+    lv_obj_set_style_bg_color(header, theme::COL_HEADER, 0);
+    lv_obj_set_style_bg_opa(header, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_side(header, LV_BORDER_SIDE_BOTTOM, 0);
+    lv_obj_set_style_border_width(header, 1, 0);
+    lv_obj_set_style_border_color(header, theme::COL_BORDER, 0);
     lv_obj_update_layout(header);
 
     title_label = lv_label_create(header);
     lv_obj_add_style(title_label, &theme::style_label, 0);
     lv_obj_set_style_text_font(title_label, &lv_font_montserrat_18, 0);
     lv_obj_set_style_text_align(title_label, LV_TEXT_ALIGN_CENTER, 0);
+    lv_obj_set_style_text_letter_space(title_label, 1, 0);
     lv_obj_set_width(title_label, 120);
     lv_obj_align(title_label, LV_ALIGN_CENTER, 0, 0);
 
@@ -190,7 +208,7 @@ void build() {
             lv_obj_t *button = theme::make_button(grid, definition->icon, definition->label);
             lv_obj_set_grid_cell(button, LV_GRID_ALIGN_STRETCH, static_cast<lv_coord_t>(button_index % GRID_COLUMNS_COUNT), 1,
                                  LV_GRID_ALIGN_STRETCH, static_cast<lv_coord_t>(button_index / GRID_COLUMNS_COUNT), 1);
-            lv_obj_add_event_cb(button, button_event, LV_EVENT_CLICKED, const_cast<ButtonDef *>(definition));
+            lv_obj_add_event_cb(button, button_event, LV_EVENT_PRESSED, const_cast<ButtonDef *>(definition));
         }
     }
 

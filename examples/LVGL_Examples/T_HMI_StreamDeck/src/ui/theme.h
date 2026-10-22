@@ -23,10 +23,14 @@ extern lv_style_t style_header_button;
 extern lv_style_t style_header_button_pressed;
 
 // Palette
-inline const lv_color_t COL_BG = lv_color_hex(0x101418);
-inline const lv_color_t COL_CARD = lv_color_hex(0x1C232B);
-inline const lv_color_t COL_ACCENT = lv_color_hex(0x00B4D8);
-inline const lv_color_t COL_ACCENT_DARK = lv_color_hex(0x007A94);
-inline const lv_color_t COL_TEXT = lv_color_hex(0xE8F1F2);
+inline const lv_color_t COL_BG = lv_color_hex(0x050807);
+inline const lv_color_t COL_HEADER = lv_color_hex(0x080C09);
+inline const lv_color_t COL_CARD = lv_color_hex(0x111813);
+inline const lv_color_t COL_CARD_PRESSED = lv_color_hex(0x17341F);
+inline const lv_color_t COL_BORDER = lv_color_hex(0x26332A);
+inline const lv_color_t COL_ACCENT = lv_color_hex(0x4ADE4A);
+inline const lv_color_t COL_ACCENT_DARK = lv_color_hex(0x1E7A2E);
+inline const lv_color_t COL_TEXT = lv_color_hex(0xF2F7F2);
+inline const lv_color_t COL_MUTED = lv_color_hex(0x8FA394);
 
 } // namespace theme

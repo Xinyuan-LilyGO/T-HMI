@@ -22,18 +22,17 @@ void init() {
     lv_style_init(&style_card);
     lv_style_set_bg_color(&style_card, COL_CARD);
     lv_style_set_bg_opa(&style_card, LV_OPA_COVER);
-    lv_style_set_radius(&style_card, 16);
+    lv_style_set_radius(&style_card, 14);
     lv_style_set_border_width(&style_card, 1);
-    lv_style_set_border_color(&style_card, lv_color_hex(0x2A343F));
+    lv_style_set_border_color(&style_card, COL_BORDER);
+    lv_style_set_shadow_width(&style_card, 0);
     lv_style_set_pad_all(&style_card, 8);
 
-    // Use a darker accent while pressed so the cyan icon stays visible.
+    // Subtle green wash on press keeps the accent visible without a shadow.
     lv_style_init(&style_card_pressed);
-    lv_style_set_bg_color(&style_card_pressed, COL_ACCENT_DARK);
-    lv_style_set_border_color(&style_card_pressed, COL_ACCENT_DARK);
+    lv_style_set_bg_color(&style_card_pressed, COL_CARD_PRESSED);
+    lv_style_set_border_color(&style_card_pressed, COL_ACCENT);
     lv_style_set_border_width(&style_card_pressed, 1);
-    lv_style_set_transform_width(&style_card_pressed, 0);
-    lv_style_set_transform_height(&style_card_pressed, 0);
 
     // Label
     lv_style_init(&style_label);
@@ -49,15 +48,16 @@ void init() {
     lv_style_init(&style_header_button);
     lv_style_set_bg_opa(&style_header_button, LV_OPA_TRANSP);
     lv_style_set_border_width(&style_header_button, 1);
+    lv_style_set_border_color(&style_header_button, COL_BORDER);
     lv_style_set_radius(&style_header_button, 10);
     lv_style_set_pad_all(&style_header_button, 0);
     lv_style_set_shadow_width(&style_header_button, 0);
 
     lv_style_init(&style_header_button_pressed);
-    lv_style_set_bg_color(&style_header_button_pressed, COL_CARD);
+    lv_style_set_bg_color(&style_header_button_pressed, COL_CARD_PRESSED);
     lv_style_set_bg_opa(&style_header_button_pressed, LV_OPA_COVER);
     lv_style_set_border_width(&style_header_button_pressed, 1);
-    lv_style_set_border_color(&style_header_button_pressed, COL_ACCENT_DARK);
+    lv_style_set_border_color(&style_header_button_pressed, COL_ACCENT);
 }
 
 lv_obj_t *make_button(lv_obj_t *parent, const char *icon, const char *label) {
